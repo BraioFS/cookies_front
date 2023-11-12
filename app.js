@@ -31,9 +31,9 @@ const produtos = [
 //Rota para exibir produtos
 app.get("/", (req, res) => {
   res.cookie("usuario_logado", {
-    nome: "Jão",
-    email: "bryan@example.com",
-    url: "https://a.imagem.app/oqijzN.png",
+    nome: "Jyovane",
+    email: "Jyovane@gmail.com",
+    url: "https://a.imagem.app/ojVFgr.jpeg",
   });
   res.send(`
   <div style="font-family: 'Cera Round Pro', sans-serif; text-transform: uppercase;">
@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
   ${produtos
     .map(
       (produto) =>
-        `<li style="list-style-type: none; text-align: left; margin-top: 20px; text-transform: uppercase;">${produto.nome} - ${produto.preco} <a href="/adicionar/${produto.id}" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border: none; border-radius: 5px;">Adicionar</a></li>`
+        `<li style="list-style-type: none; text-align: left; margin-top: 20px; text-transform: uppercase;"><strong>${produto.nome}:</strong> R$ ${produto.preco} <a href="/adicionar/${produto.id}" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border: none; border-radius: 5px;">Adicionar</a></li>`
     )
     .join("")}
 </ul>
@@ -69,35 +69,44 @@ app.get("/adicionar/:id", (req, res) => {
 });
 
 app.get("/carrinho", (req, res) => {
-  const carrinho = req.session.carrinho || [];
-  const total = carrinho.reduce((acc, produto) => acc + produto.preco, 0);
-
-  res.send(`
-  <h1>Carrinho de compras</h1>
-  <ul>
-  ${carrinho
-    .map((produto) => `<li>${produto.nome} - ${produto.preco}<li>`)
-    .join("")}
-  </ul>
-
-  <p>Total: ${total}</p>
-  <a href="/">Continuar comprando<a/>
-  `);
-});
-
-app.get("/perfil", (req, res) => {
-  const usuarioLogado = req.cookies.usuario_logado;
-  res.send(`
-  <h1>Seu perfil</h1>
-  <ul>
-  <img src=${usuarioLogado.url} alt="foto" border="0" />
-  <li>Nome: ${usuarioLogado.nome}</li>
-  <li>Email: ${usuarioLogado.email}</li>
-  </ul>
+    const carrinho = req.session.carrinho || [];
+    const total = carrinho.reduce((acc, produto) => acc + produto.preco, 0);
   
-  <a href="/">Voltar as compras<a/>
-  `);
-});
+    res.send(`
+      <div style="font-family: 'Cera Round Pro', sans-serif; text-transform: uppercase; text-align: center; margin-top: 80px;">
+        <h1>Carrinho de compras</h1>
+        <ul style="list-style-type: none; padding: 0; margin: 0;">
+          ${carrinho
+            .map(
+              (produto) =>
+                `<li style="margin-top: 20px;"><strong>${produto.nome}</strong> : R$ ${produto.preco}</li>`
+            )
+            .join("")}
+        </ul>
+  
+        <p style="margin-top: 20px;"><strong>Total:</strong> R$ ${total}</p>
+        <a href="/" style="display: inline-block; background-color: #007bff; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border: none; border-radius: 5px; margin-top: 20px;">Continuar comprando</a>
+      </div>
+    `);
+  });
+  
+
+  app.get("/perfil", (req, res) => {
+    const usuarioLogado = req.cookies.usuario_logado;
+    res.send(`
+      <div style="font-family: 'Cera Round Pro', sans-serif; text-transform: uppercase; text-align: center; margin-top: 80px;">
+        <h1>Seu perfil</h1>
+        <ul style="list-style-type: none; padding: 0; margin: 0;">
+          <img src="${usuarioLogado.url}" alt="foto" style="max-width: 100%; height: auto; border: 0; margin-top: 20px;" />
+          <li style="margin-top: 20px; margin-right: 109px"><strong>Nome:</strong> ${usuarioLogado.nome}</li>
+          <li><strong>Email:</strong> ${usuarioLogado.email}</li>
+        </ul>
+    
+        <a href="/" style="display: inline-block; background-color: #ff3737; color: #fff; padding: 10px 20px; text-align: center; text-decoration: none; border: none; border-radius: 5px; margin-top: 20px;">Voltar às compras</a>
+      </div>
+    `);
+  });
+  
 
 app.listen(port, () => {
   console.log(`Rodando em: http://localhost:${port}`);
